@@ -63,11 +63,15 @@ int main(int argc, char *argv[]) {
 
     nBytes = strlen(buffer) + 1;
 
+    ssize_t sendto(int socket, const void *message, size_t length,
+           int flags, const struct sockaddr *dest_addr,
+           socklen_t dest_len);
     /*Send message to server*/
-    sendto(clientSocket,buffer,nBytes,0,(struct sockaddr *)&serverAddr,addr_size);
+    lossy_sendto(loss_probability, random_seed, clientSocket, buffer, nBytes,
+      (struct sockaddr *)&serverAddr, addr_size);
 
     /*Receive message from server*/
-                nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
+    nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
 
     printf("Received from server: %s\n",buffer);
 
