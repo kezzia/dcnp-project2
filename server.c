@@ -1,12 +1,23 @@
 /************* UDP SERVER CODE *******************/
-
+#include <ctype.h>
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
 #include <stdlib.h>
 
-int main(){
+/*
+ * <server> <port> <loss probability> <random seed>
+ */
+int main(int argc, char *argv[]) {
+  if (argc != 4) {
+    printf("Too few args!\n");
+    return 1;
+  }
+
+  int port_num = atoi(argv[1]);
+  printf("Starting server on port number %i\n", port_num);
   int udpSocket, nBytes;
   char buffer[1024];
   struct sockaddr_in serverAddr, clientAddr;
@@ -18,9 +29,13 @@ int main(){
   udpSocket = socket(PF_INET, SOCK_DGRAM, 0);
 
   /*Configure settings in address struct*/
+
+  /* family/domain to be used by listening socket */
   serverAddr.sin_family = AF_INET;
-  serverAddr.sin_port = htons(7891);
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  /* port on which server will wait for clients */
+  serverAddr.sin_port = htons(port_num);
+  /* interface the socket will listen on */
+  serverAddr.sin_addr.s_addr = inet_addr(INADDR_ANY);
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
   /*Bind socket with address struct*/
