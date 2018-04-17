@@ -76,10 +76,18 @@ int main(int argc, char *argv[]) {
     }
     fclose(input);
 
+    while(1) {
       /*Receive message from server*/
       nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
 
       printf("Received from server: %s\n",buffer);
+
+      // we should close if the server reports an error
+      if (strcmp(buffer,"Failure!\n") == 0) {
+        printf("Closing...\n");
+        return 0;
+      }
+    }
 
     return 0;
 }

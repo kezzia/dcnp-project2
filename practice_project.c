@@ -10,7 +10,7 @@
 // checks to see if the incoming string is of format 1 or format 2
 int correct_format(char str[]) {
   char reason[50];
-  printf("String is %s\n", str);
+  //printf("String is %s\n", str);
 
   int i, j, count;
   char splitStrings[10][17];
@@ -44,6 +44,8 @@ int correct_format(char str[]) {
               printf("members of type 1 should be decimals\n");
               return 0;
             }
+          } else {
+            printf("I'm a 0\n");
           }
         }
         // if there is more than one entry

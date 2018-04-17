@@ -39,24 +39,33 @@ int main(int argc, char *argv[]) {
 
   /*Initialize size variable to be used later on*/
   addr_size = sizeof serverStorage;
-
+  printf("Server running on port %d\n", port_num);
   while(1){
     /* Try to receive any incoming UDP datagram. Address and port of
       requesting client will be stored on serverStorage variable */
     nBytes = recvfrom(udpSocket,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
+
+    printf("Received from client: %s", buffer);
+
     if (correct_format(buffer) == 1) {
       strcpy(message, "Success!\n");
     } else {
       strcpy(message, "Failure!\n");
     }
-    //printf("Received from client: %s", buffer);
-    /*Convert message received to uppercase*/
-    for(i=0;i<nBytes-1;i++)
-      buffer[i] = toupper(buffer[i]);
 
+    printf("%s\n", message);
+    // /*Convert message received to uppercase*/
+    // for(i=0;i<nBytes-1;i++)
+    //   buffer[i] = toupper(buffer[i]);
+    //
 
     /*Send uppercase message back to client, using serverStorage as the address*/
-    sendto(udpSocket,buffer,nBytes,0,(struct sockaddr *)&serverStorage,addr_size);
+    sendto(udpSocket,message,nBytes,0,(struct sockaddr *)&serverStorage,addr_size);
+
+    // if we get a syntax error we must exit without doing anything
+    if (strcmp(message,"Failure!\n") == 0) {
+      return 0;
+    }
   }
 
   return 0;

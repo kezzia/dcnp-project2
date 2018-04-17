@@ -19,7 +19,7 @@ int main() {
   // body separated by commas instead of faces. FALSE.
   char str10[] = "0 00000010 01011001,00000001";
   // type 1 but contains a 0
-  char str11[] = "1 2 0,0";
+  char str11[] = "1 1 0";
 
   printf("\nTEST 1:\n");
   int a = correct_format(str1);
