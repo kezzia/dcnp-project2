@@ -36,11 +36,14 @@ int correct_format(char str[]) {
     if (count >= 3) {
       // if the string is type 1
       if (strcmp(splitStrings[0], "1") == 0) {
+        //checking for decimals by checking for numbers padded with 0s
         for(int i = 2; i < count; i++) {
-          int first_digit = splitStrings[i][0] - '0';
-          if (first_digit == 0) {
-            printf("members of type 1 should be decimals\n");
-            return 0;
+          if (strlen(splitStrings[i]) > 1) {
+            int first_digit = splitStrings[i][0] - '0';
+            if (first_digit == 0) {
+              printf("members of type 1 should be decimals\n");
+              return 0;
+            }
           }
         }
         // if there is more than one entry

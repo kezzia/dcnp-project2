@@ -18,6 +18,8 @@ int main() {
   char str9[] = "1 100 3 2 1";
   // body separated by commas instead of faces. FALSE.
   char str10[] = "0 00000010 01011001,00000001";
+  // type 1 but contains a 0
+  char str11[] = "1 2 0,0";
 
   printf("\nTEST 1:\n");
   int a = correct_format(str1);
@@ -39,6 +41,9 @@ int main() {
   int i = correct_format(str9);
   printf("\nTEST 10:\n");
   int j = correct_format(str10);
+  printf("\nTEST 11:\n");
+  int k = correct_format(str11);
+
 
   printf("Test 1: ");
   if (a == 1) {
@@ -110,8 +115,15 @@ int main() {
     printf("FALSE\n");
   }
 
+  printf("Test 11: ");
+  if (k == 1) {
+    printf("TRUE\n");
+  } else {
+    printf("FALSE\n");
+  }
+
   if ((a == 1) && (b == 1) && (c == 1) && (d == 1) && (e == 0) && (f == 0) &&
-    (g == 0) && (h == 0) && (i == 0) && (j == 0)) {
+    (g == 0) && (h == 0) && (i == 0) && (j == 0) && (k == 1)) {
     printf("TRUE\n");
   } else {
     printf("FALSE\n");
