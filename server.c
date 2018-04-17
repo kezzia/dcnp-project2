@@ -59,8 +59,9 @@ int main(int argc, char *argv[]) {
     //   buffer[i] = toupper(buffer[i]);
     //
 
-    /*Send uppercase message back to client, using serverStorage as the address*/
-    sendto(udpSocket,message,nBytes,0,(struct sockaddr *)&serverStorage,addr_size);
+        /*Send uppercase message back to client, using serverStorage as the address*/
+    lossy_sendto(loss_probability, random_seed, udpSocket, message, nBytes,
+      (struct sockaddr *)&serverStorage,addr_size);
 
     // if we get a syntax error we must exit without doing anything
     if (strcmp(message,"Failure!\n") == 0) {
