@@ -1,10 +1,103 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <math.h>
 
 //Type Amount Number1 Number2 … NumberN --> Type Amount Number1, Number2, … , NumberN
 //0000 0010 1000111 11111111 --> 0001 002 71,255
+
+// checks to see if the incoming string is of format 1 or format 2
+int correct_format(char str[]) {
+  char reason[50];
+  printf("String is %s\n", str);
+
+  int i, j, count;
+  char splitStrings[10][17];
+
+  j = 0; count = 0;
+    for (i = 0; i <= strlen(str); i++) {
+      //if space, comma, or null found, assign null to splitStrings[count]
+      if ((str[i] == ' ') || (str[i] == ',') || (str[i] == '\0')) {
+        splitStrings[count][j] ='\0';
+        count++;
+        j = 0;
+      } else {
+        splitStrings[count][j] = str[i];
+        j++;
+      }/*endif*/
+    } /* endfor */
+
+    // for(int k = 0; k < count; k++) {
+    //   printf("splitStrings[%d]: %s\n", k, splitStrings[k]);
+    // }
+
+    // we cannot have the correct format if there are less than 3 fields
+    if (count >= 3) {
+      // if the string is type 1
+      if (strcmp(splitStrings[0], "1") == 0) {
+        for(int i = 2; i < count; i++) {
+          int first_digit = splitStrings[i][0] - '0';
+          if (first_digit == 0) {
+            printf("members of type 1 should be decimals\n");
+            return 0;
+          }
+        }
+        // if there is more than one entry
+        if(atoi(splitStrings[1]) > 1) {
+          // check original string for commas
+          char *substring = strstr(str, ",");
+          if(!substring) {
+            // if there are no commas then the format is wrong
+            printf("members of type 1 are separated by commas\n");
+            return 0;
+          }
+        }
+        // if there is only one entry, or there are no commas the format is right
+        return 1;
+      } else if (strcmp(splitStrings[0], "0") == 0) { // if first character is a 0
+        // check that every single character is not something other than 0 or 1
+        for(int i = 0; i < count; i++) {
+          for(int j = 0; j < 17; j++) {
+            if (isdigit(splitStrings[i][j])) {
+              int char_as_int = splitStrings[i][j] - '0';
+              if (char_as_int > 1) {
+                printf("type 0 should have binary only. %d is not binary\n", char_as_int);
+                return 0;
+              }
+            }
+          }
+        }
+        // check that splitstrings 2 is 1 byte long
+        if( strlen(splitStrings[1]) != 8) {
+          // if splitStrings[2] is shorter than 1 byte, it's wrong
+          printf("the amount of type 0 should be 1 byte long\n");
+          return 0;
+        }
+
+        // if there is more than one entry
+        if (convert_from_binary(splitStrings[1]) > 1) {
+          // check that original string has no commas
+          char *substring = strstr(str, ",");
+          if(substring) {
+            // if there are commas then the format is wrong
+            printf("members of type 0 should not be comma separated\n");
+            return 0;
+          }
+        }
+        // if we get through all that it must be true
+      return 1;
+    } else { // error the type is neither 0 nor 1
+      printf("invalid type. entries can be type 0 or type 1\n");
+      return 0;
+    }
+  } else { // else for if count < 3
+    printf("This line has only %d when it should have at least 3\n", count);
+    return 0;
+  }
+
+}
+
 
 // converts ascii codes into binary numbers (unpadded)
 long convert_to_binary(long decimal_num) {

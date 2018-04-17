@@ -1,41 +1,37 @@
 /************* UDP SERVER CODE *******************/
-#include <ctype.h>
-#include <arpa/inet.h>
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
 #include <stdlib.h>
 
-/*
- * <server> <port> <loss probability> <random seed>
- */
+/* <server> <port> <loss probability> <random seed> */
 int main(int argc, char *argv[]) {
-  if (argc != 4) {
-    printf("Too few args!\n");
-    return 1;
-  }
-
-  int port_num = atoi(argv[1]);
-  printf("Starting server on port number %i\n", port_num);
-  int udpSocket, nBytes;
+  int udpSocket, nBytes, port_num, loss_probability, random_seed;
   char buffer[1024];
+  char message[9];
   struct sockaddr_in serverAddr, clientAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size, client_addr_size;
   int i;
 
+  if (argc != 4) {
+    printf("Too few args!\n");
+    return 1;
+  }
+
+  port_num = atoi(argv[1]);
+  loss_probability = atoi(argv[2]);
+  random_seed = atoi(argv[3]);
+
   /*Create UDP socket*/
   udpSocket = socket(PF_INET, SOCK_DGRAM, 0);
 
   /*Configure settings in address struct*/
-
-  /* family/domain to be used by listening socket */
   serverAddr.sin_family = AF_INET;
-  /* port on which server will wait for clients */
   serverAddr.sin_port = htons(port_num);
-  /* interface the socket will listen on */
-  serverAddr.sin_addr.s_addr = inet_addr(INADDR_ANY);
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
   /*Bind socket with address struct*/
@@ -48,10 +44,16 @@ int main(int argc, char *argv[]) {
     /* Try to receive any incoming UDP datagram. Address and port of
       requesting client will be stored on serverStorage variable */
     nBytes = recvfrom(udpSocket,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
-
+    if (correct_format(buffer) == 1) {
+      strcpy(message, "Success!\n");
+    } else {
+      strcpy(message, "Failure!\n");
+    }
+    //printf("Received from client: %s", buffer);
     /*Convert message received to uppercase*/
     for(i=0;i<nBytes-1;i++)
       buffer[i] = toupper(buffer[i]);
+
 
     /*Send uppercase message back to client, using serverStorage as the address*/
     sendto(udpSocket,buffer,nBytes,0,(struct sockaddr *)&serverStorage,addr_size);
