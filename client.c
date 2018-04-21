@@ -70,6 +70,7 @@ int main(int argc, char *argv[]) {
 
     printf("File opened!\n");
     while ( fgets(str, 60, input) != NULL) {
+      printf("Working\n");
       sprintf(buffer, "%s$%s!%i", output_file_target,str,to_format);
       printf("Sending to server: %s", buffer);
       nBytes = strlen(buffer) + 1;

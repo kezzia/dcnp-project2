@@ -97,7 +97,7 @@ int type_0_translation(char message[], char output_file_target[]) {
      /* Print each line */
      printf("\nORIGINAL STRING: %s\n", message);
      printf("OUTPUT: %s\n", message);
-     fprintf(output, "%s", message);
+     fprintf(output, "%s\n", message);
 
   fclose(output);
   return 0;
@@ -146,14 +146,9 @@ int type_1_translation(char message[], char output_file_target[]) {
     for(i=1; i < count; i++) {
       //convert each string to binary
       int dec = convert_from_binary(splitStrings[i]);
-      // convert string in the amount field to har reqrd number of bits
-      if (i == 1) {
-        printf("there are %i numbers in the entry\n", dec);
-      } else {
-        // add converted binary to super string
-        sprintf(dec_as_string, "%i", dec);
-        strcat(super_string, dec_as_string);
-      }
+      sprintf(dec_as_string, "%i", dec);
+      strcat(super_string, dec_as_string);
+
 
       //decide if spaces must be added
       if (space_number == 1) {
@@ -214,7 +209,7 @@ int type_2_translation(char message[], char output_file_target[]) {
           strcat(super_string, "0 ");
 
           char binary_as_string[17];
-          for (int i = 1; i < count; i++) {;
+          for (int i = 1; i < count; i++) {
             //check for the 16 digit numbers before trying to insert into int
             if ((strcmp(splitStrings[i],"65535") == 0) ||
             (strcmp(splitStrings[i],"65535") == 13)) {
@@ -317,10 +312,6 @@ int type_3_translation(char message[], char output_file_target[]) {
     }/*endif*/
   } /* endfor */
 
-  printf("splitStrings: ");
-  for(int z = 0; z < count; z++) {
-    printf("[%s] ", splitStrings[z]);
-  }
   //convert type 0
   if (strcmp(splitStrings[0],"0") == 0) {
     strcat(super_string, "1 ");
@@ -332,14 +323,10 @@ int type_3_translation(char message[], char output_file_target[]) {
     for(i=1; i < count; i++) {
       //convert each string to binary
       int dec = convert_from_binary(splitStrings[i]);
-      // convert string in the amount field to har reqrd number of bits
-      if (i == 1) {
-        printf("there are %i numbers in the entry\n", dec);
-      } else {
-        // add converted binary to super string
-        sprintf(dec_as_string, "%i", dec);
-        strcat(super_string, dec_as_string);
-      }
+      // add converted binary to super string
+      sprintf(dec_as_string, "%i", dec);
+      strcat(super_string, dec_as_string);
+
 
       //decide if spaces must be added
       if (space_number == 1) {
@@ -358,24 +345,26 @@ int type_3_translation(char message[], char output_file_target[]) {
     memset(super_string,0,strlen(super_string));
     space_number = 1;
   } else { // convert type 1
+    // fprintf(output, "Converted type 1\n");
     printf("\nORIGINAL STRING: %s", message);
-
     //add the new type to the super_string
     strcat(super_string, "0 ");
-
     char binary_as_string[17];
-    for (int i = 1; i < count; i++) {;
-      //check for the 16 digit numbers before trying to insert into int
+
+    //check each member of the entry
+    for (int i = 1; i < count; i++) {
+      //check for the 16 digit numbers before trying to cast as int
       if ((strcmp(splitStrings[i],"65535") == 0) ||
       (strcmp(splitStrings[i],"65535") == 13)) {
         strcat(super_string, "1111111111111111 ");
       } else if (strcmp(splitStrings[i],"65534") == 0) {
         strcat(super_string, "1111111111111110 ");
       } else {
+        //not the 16 digit numbers, safe to convert
         int binary = convert_to_binary(atol(splitStrings[i]));
-        //number of 0's we must add
-        int padding_required = 16 - intlen(binary);
 
+        // how many 0's we must add to get to 16 bits
+        int padding_required = 16 - intlen(binary);
         switch (padding_required) {
           case 1:
             sprintf(binary_as_string, "0%i", binary);
@@ -423,10 +412,17 @@ int type_3_translation(char message[], char output_file_target[]) {
             sprintf(binary_as_string, "000000000000000%i", binary);
             break;
         }
+        // append number to output string
         strcat(super_string, binary_as_string);
+        // append space after number
         strcat(super_string, " ");
-      }/* endif */
-    }/* endfor */
+      }
+    }
+    printf("CONVERTED STRING:\n%s\n", super_string);
+    fprintf(output, "%s\n", super_string);
+    /*clear super string */
+    memset(super_string,0,strlen(super_string));
+
   }
 
   fclose(output);

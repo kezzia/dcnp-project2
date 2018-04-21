@@ -46,8 +46,6 @@ int main(int argc, char *argv[]) {
       requesting client will be stored on serverStorage variable */
     nBytes = recvfrom(udpSocket,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
 
-    printf("Received from client: %s\n", buffer);
-
     int separator1_index = find_index_of_separator(buffer,'$');
     int separator2_index = find_index_of_separator(buffer,'!');
 
@@ -56,7 +54,8 @@ int main(int argc, char *argv[]) {
     output_file_target[separator1_index ] = '\0';
 
     char message[60];
-    strncpy(message, &buffer[separator1_index + 1], (separator2_index-separator1_index)-5);
+    strncpy(message, &buffer[separator1_index + 1],
+      (separator2_index-separator1_index)-3);
     message[strlen(buffer)] = '\0';     /*  terminate substring */
 
     char to_format_char[60];
