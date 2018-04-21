@@ -1,3 +1,4 @@
+int correct_format(char str[]);
 long convert_to_binary(long decimal_num);
 int convert_from_binary(char binary[]);
 int intlen(long x);

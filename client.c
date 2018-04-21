@@ -1,10 +1,11 @@
-/************* UDP CLIENT CODE *******************/
 #include <arpa/inet.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 #include <string.h>
+#include "practice_project.h"
+#include "sendlib.h"
 
 /*
 * <client> <server IP> <server port> <file path> <to format> <to name>
@@ -21,7 +22,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   /*setting server ip */
-  server_ip = argv[1];
+  strcpy(server_ip, argv[1]);
   /* Setting port # */
   port_num = atoi(argv[2]);
   /* Setting input file path*/

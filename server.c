@@ -1,10 +1,12 @@
-/************* UDP SERVER CODE *******************/
-
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 #include <string.h>
 #include <stdlib.h>
+#include "practice_project.h"
+#include "sendlib.h"
+
 
 /* <server> <port> <loss probability> <random seed> */
 int main(int argc, char *argv[]) {
@@ -57,10 +59,10 @@ int main(int argc, char *argv[]) {
       return 0;
     }
 
-    // type_0_translation(buffer, "output.txt");
-    type_1_translation(buffer, "output.txt");
-    type_2_translation(buffer, "output.txt");
-    type_3_translation(buffer, "output.txt");
+    type_0_translation(buffer, "output.txt");
+    //type_1_translation(buffer, "output.txt");
+    //type_2_translation(buffer, "output.txt");
+    //type_3_translation(buffer, "output.txt");
 
     /*Send message back to client, using serverStorage as the address*/
     lossy_sendto(loss_probability, random_seed, udpSocket, message, nBytes,
