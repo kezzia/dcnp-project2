@@ -46,27 +46,40 @@ int main(int argc, char *argv[]) {
       requesting client will be stored on serverStorage variable */
     nBytes = recvfrom(udpSocket,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
 
-    printf("Received from client: %s", buffer);
-    char message[20];
-    if (correct_format(buffer) == 1) {
-      strcpy(message, "Success!\n");
+    printf("Received from client: %s\n", buffer);
+
+    int separator_index = find_index_of_separator(buffer);
+    char output_file_target[60];
+    strncpy(output_file_target, buffer, separator_index);
+    output_file_target[separator_index ] = '\0';
+
+    char message[60];
+    strncpy(message, &buffer[separator_index + 1], strlen(buffer));
+    message[60] = '\0';     /*  terminate substring */
+
+    printf("message is: %s", message);
+    printf("target is: %s\n", output_file_target);
+
+
+    char reply[20];
+    if (correct_format(message) == 1) {
+      strcpy(reply, "Success!\n");
     } else {
-      strcpy(message, "Failure!\n");
+      strcpy(reply, "Failure!\n");
     }
 
     // if we get a syntax error we must exit without doing anything
-    if (strcmp(message,"Failure!\n") == 0) {
+    if (strcmp(reply,"Failure!\n") == 0) {
       return 0;
     }
-
-    type_0_translation(buffer, "output.txt");
+    type_0_translation(message, output_file_target);
     //type_1_translation(buffer, "output.txt");
     //type_2_translation(buffer, "output.txt");
     //type_3_translation(buffer, "output.txt");
-
-    /*Send message back to client, using serverStorage as the address*/
-    lossy_sendto(loss_probability, random_seed, udpSocket, message, nBytes,
-      (struct sockaddr *)&serverStorage,addr_size);
+    //
+    // /*Send message back to client, using serverStorage as the address*/
+    // lossy_sendto(loss_probability, random_seed, udpSocket, reply, nBytes,
+    //   (struct sockaddr *)&serverStorage,addr_size);
   }
 
   return 0;

@@ -97,7 +97,7 @@ int type_0_translation(char message[], char output_file_target[]) {
      /* Print each line */
      printf("\nORIGINAL STRING: %s\n", message);
      printf("OUTPUT: %s\n", message);
-     fprintf(output, "%s\n", message);
+     fprintf(output, "%s", message);
 
   fclose(output);
   return 0;
@@ -560,5 +560,16 @@ int correct_format(char str[]) {
     printf("This line has only %d when it should have at least 3\n", count);
     return 0;
   }
+}
 
+int find_index_of_separator(char str[]) {
+  char* ptr;
+  int index;
+
+  ptr = strchr(str, '$');
+
+  index = ptr - str;
+
+  printf("The index is %d\n", index);
+  return index;
 }
