@@ -463,17 +463,17 @@ int correct_format(char str[]) {
       // if the string is type 1
       if (strcmp(splitStrings[0], "1") == 0) {
         //checking for decimals by checking for numbers padded with 0s
-        for(int i = 2; i < count; i++) {
-          if (strlen(splitStrings[i]) > 1) {
-            int first_digit = splitStrings[i][0] - '0';
-            if (first_digit == 0) {
-              printf("members of type 1 should be decimals\n");
-              return 0;
-            }
-          } else {
-            printf("I'm a 0\n");
-          }
-        }
+        // for(int i = 2; i < count; i++) {
+        //   if (strlen(splitStrings[i]) > 1) {
+        //     int first_digit = splitStrings[i][0] - '0';
+        //     if (first_digit == 0) {
+        //       printf("members of type 1 should be decimals\n");
+        //       return 0;
+        //     }
+        //   } else {
+        //     printf("I'm a 0\n");
+        //   }
+        // }
         // if there is more than one entry
         if(atoi(splitStrings[1]) > 1) {
           // check original string for commas
@@ -528,11 +528,11 @@ int correct_format(char str[]) {
   }
 }
 
-int find_index_of_separator(char str[]) {
+int find_index_of_separator(char str[], char separator) {
   char* ptr;
   int index;
 
-  ptr = strchr(str, '$');
+  ptr = strchr(str, separator);
 
   index = ptr - str;
 

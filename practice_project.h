@@ -6,3 +6,4 @@ int type_0_translation(char message[], char output_file_target[]);
 int type_1_translation(char message[], char output_file_target[]);
 int type_2_translation(char message[], char output_file_target[]);
 int type_3_translation(char message[], char output_file_target[]);
+int find_index_of_separator(char str[], char separator);
