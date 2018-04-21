@@ -74,8 +74,8 @@ int main(int argc, char *argv[]) {
     }
     //type_0_translation(message, output_file_target);
     //type_1_translation(message, output_file_target);
-    type_2_translation(message, output_file_target);
-    //type_3_translation(message, output_file_target);
+    //type_2_translation(message, output_file_target);
+    type_3_translation(message, output_file_target);
     //
     /*Send message back to client, using serverStorage as the address*/
     lossy_sendto(loss_probability, random_seed, udpSocket, reply, nBytes,
