@@ -13,13 +13,15 @@
 int main(int argc, char *argv[]) {
   char input_file_path[1024];
   char output_file_target[1024];
+  char server_ip[17];
   int port_num, to_format, loss_probability, random_seed;
 
   if (argc != 8) {
     printf("Too few args!\n");
     return 1;
   }
-
+  /*setting server ip */
+  server_ip = argv[1];
   /* Setting port # */
   port_num = atoi(argv[2]);
   /* Setting input file path*/

@@ -181,73 +181,43 @@ int intlen(long x) {
 }
 
 
-int type_0_translation(char input_file_path[], char output_file_target[]) {
+//no conversion
+int type_0_translation(char message[], char output_file_target[]) {
   printf("RUNNING TYPE 0 TRANSLATION\n");
-  FILE * fp;
-  FILE * fn;
-  char str[60];
-  fp = fopen(input_file_path , "r");
-  fn = fopen(output_file_target,"w");
+  FILE * output;
+  output = fopen(output_file_target,"a");
 
-  if(fp == NULL) {
-     perror("Error opening file");
-     return(-1);
+  if (output == NULL) {
+    printf("Error opening file!\n");
+    exit(1);
   }
-  while( fgets (str, 60, fp)!=NULL ) {
      /* Print each line */
-     printf("\n%s\n", "ORIGINAL STRING:");
-     printf("%s", str);
+     printf("\nORIGINAL STRING: %s\n", message);
+     printf("OUTPUT: %s\n", message);
+     fprintf(output, "%s\n", message);
 
-     fprintf(fn, str);
-  }
-  fclose(fp);
-  fclose(fn);
+  fclose(output);
   return 0;
 }
 
-
-int type_1_translation(char input_file_path[], char output_file_target[]) {
+//convert type binary to decimal with type decimals unchanged
+int type_1_translation(char message[], char output_file_target[]) {
    printf("RUNNING TYPE 1 TRANSLATION\n");
-   FILE *fp;
-   FILE * fn;
+   FILE * output;
    char str[60];
    char super_string[60];
    char splitStrings[10][17]; // we can store 10 words of 17 chars
    int super_string_index = 0;
    int i, j, count;
 
-   /* opening file for reading */
-   fp = fopen(input_file_path , "r");
-   fn = fopen(output_file_target,"w");
-
-   if(fp == NULL) {
-      perror("Error opening file");
-      return(-1);
-   }
-   while( fgets (str, 60, fp)!=NULL ) {
-      // Removing all commas from the string
-
-      //check for the presence of a comma to start
-      char *ptr = strchr(str, ',');
-      //while there is a Comma
-      while(ptr) {
-        //printf("\n%s\n", "There are still commas in the string");
-        // find its index
-        int index = ptr - str;
-        //printf("Comma at index %i\n", index);
-        // replace the comma with a space
-        str[index] = ' ';
-        //printf("New string: %s", str);
-
-        //check for commas again
-        ptr = strchr(str, ',');
-      }
+   /* opening file for writing */
+   output = fopen(output_file_target,"w");
 
       int numbers_in_string;
       j = 0; count = 0;
-        for (i = 0; i <= strlen(str); i++) {
+        for (i = 0; i <= strlen(message); i++) {
           //if space or null found, assign null to splitStrings[count]
-          if ((str[i] == ' ') || (str[i] == '\0')) {
+          if ((message[i] == ' ') || (message[i] == ',') || (message[i] == '\0')) {
             splitStrings[count][j] ='\0';
             count++;
             j = 0;
@@ -328,28 +298,28 @@ int type_1_translation(char input_file_path[], char output_file_target[]) {
             }/* endif */
           }/* endfor */
         } else { // if type = 0 just copy the string in
-          fprintf(fn, "%s\n", str);
+          fprintf(output, "%s\n", str);
         }
         printf("CONVERTED STRING:\n%s\n", super_string);
-        fprintf(fn, "%s\n", super_string);
+        fprintf(output, "%s\n", super_string);
         /*clear super string */
         memset(super_string,0,strlen(super_string));
-    }/* end while */
-   fclose(fp);
-   fclose(fn);
+
+
+   fclose(output);
    return(0);
 }
 
 int type_2_translation(char input_file_path[], char output_file_target[]) {
   printf("RUNNING TYPE 2 TRANSLATION\n");
   FILE * fp;
-  FILE * fn;
+  FILE * output;
   char str[60];
   char splitStrings[10][17]; // we can store 10 words of 17 chars
   char super_string[60];
   char dec_as_string[10];
   fp = fopen(input_file_path , "r");
-  fn = fopen(output_file_target,"w");
+  output = fopen(output_file_target,"w");
   int i, j, count;
 
   if(fp == NULL) {
@@ -407,31 +377,31 @@ int type_2_translation(char input_file_path[], char output_file_target[]) {
           }
           space_number++;
         }/* endfor*/
-        fprintf(fn, "%s\n", super_string);
+        fprintf(output, "%s\n", super_string);
         printf("CONVERTED STRING: %s\n", super_string);
         // clear super_string for the next numbers
         memset(super_string,0,strlen(super_string));
         space_number = 1;
       } /*endif*/
       else { //if type = 1 just copy it in
-        fprintf(fn, "%s\n", str);
+        fprintf(output, "%s\n", str);
       }
     } /*endwhile*/
   fclose(fp);
-  fclose(fn);
+  fclose(output);
   return 0;
 }
 
 
 int type_3_translation(char input_file_path[], char output_file_target[]) {
   FILE * fp;
-  FILE * fn;
+  FILE * output;
   char str[60];
   char splitStrings[10][17]; // we can store 10 words of 17 chars
   char super_string[60];
   char dec_as_string[10];
   fp = fopen(input_file_path , "r");
-  fn = fopen(output_file_target,"w");
+  output = fopen(output_file_target,"w");
   int i, j, count;
 
   if(fp == NULL) {
@@ -510,7 +480,7 @@ int type_3_translation(char input_file_path[], char output_file_target[]) {
         }
         space_number++;
       }/* endfor*/
-      fprintf(fn, "%s\n", super_string);
+      fprintf(output, "%s\n", super_string);
       printf("CONVERTED STRING: %s\n", super_string);
       // clear super_string for the next numbers
       memset(super_string,0,strlen(super_string));
@@ -584,12 +554,12 @@ int type_3_translation(char input_file_path[], char output_file_target[]) {
         }/* endif */
       }/* endfor */
       printf("CONVERTED STRING:\n%s\n", super_string);
-      fprintf(fn, "%s\n", super_string);
+      fprintf(output, "%s\n", super_string);
       /*clear super string */
       memset(super_string,0,strlen(super_string));
     }
   } /*endwhile*/
   fclose(fp);
-  fclose(fn);
+  fclose(output);
   return 0;
 }

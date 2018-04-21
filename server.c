@@ -10,7 +10,6 @@
 int main(int argc, char *argv[]) {
   int udpSocket, nBytes, port_num, loss_probability, random_seed;
   char buffer[1024];
-  char message[9];
   struct sockaddr_in serverAddr, clientAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size, client_addr_size;
@@ -46,27 +45,26 @@ int main(int argc, char *argv[]) {
     nBytes = recvfrom(udpSocket,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
 
     printf("Received from client: %s", buffer);
-
+    char message[20];
     if (correct_format(buffer) == 1) {
       strcpy(message, "Success!\n");
     } else {
       strcpy(message, "Failure!\n");
     }
 
-    printf("%s\n", message);
-    // /*Convert message received to uppercase*/
-    // for(i=0;i<nBytes-1;i++)
-    //   buffer[i] = toupper(buffer[i]);
-    //
-
-        /*Send uppercase message back to client, using serverStorage as the address*/
-    lossy_sendto(loss_probability, random_seed, udpSocket, message, nBytes,
-      (struct sockaddr *)&serverStorage,addr_size);
-
     // if we get a syntax error we must exit without doing anything
     if (strcmp(message,"Failure!\n") == 0) {
       return 0;
     }
+
+    // type_0_translation(buffer, "output.txt");
+    type_1_translation(buffer, "output.txt");
+    type_2_translation(buffer, "output.txt");
+    type_3_translation(buffer, "output.txt");
+
+    /*Send message back to client, using serverStorage as the address*/
+    lossy_sendto(loss_probability, random_seed, udpSocket, message, nBytes,
+      (struct sockaddr *)&serverStorage,addr_size);
   }
 
   return 0;
