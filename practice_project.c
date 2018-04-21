@@ -97,17 +97,16 @@ int type_0_translation(char message[], char output_file_target[]) {
      /* Print each line */
      printf("\nORIGINAL STRING: %s\n", message);
      printf("OUTPUT: %s\n", message);
-     fprintf(output, "%s\n", message);
+     fprintf(output, "%s", message);
 
   fclose(output);
   return 0;
 }
 
 //convert type binary to decimal with type decimals unchanged
-int type_1_translation(char message[], char output_file_target[]) {
-   printf("RUNNING TYPE 1 TRANSLATION\n");
+int type_2_translation(char message[], char output_file_target[]) {
+   printf("RUNNING TYPE 2 TRANSLATION\n");
    FILE * output;
-   char str[60];
    char super_string[60];
    char splitStrings[10][17]; // we can store 10 words of 17 chars
    int super_string_index = 0;
@@ -125,96 +124,98 @@ int type_1_translation(char message[], char output_file_target[]) {
             count++;
             j = 0;
           } else {
-            splitStrings[count][j] = str[i];
+            splitStrings[count][j] = message[i];
             j++;
           }/*endif*/
         } /* endfor */
 
-        // //convert only if type 1
-        // if (strcmp(splitStrings[0],"1") == 0) {
-        //   printf("\nORIGINAL STRING: %s",str);
-        //
-        //   //add the new type to the super_string
-        //   strcat(super_string, "0 ");
-        //
-        //   char binary_as_string[17];
-        //   for (int i = 1; i < count; i++) {
-        //     //check for the 16 digit numbers before trying to insert into int
-        //     if (strcmp(splitStrings[i],"65535") == 0) {
-        //       strcat(super_string, "1111111111111111 ");
-        //     } else if (strcmp(splitStrings[i],"65534") == 0) {
-        //       strcat(super_string, "1111111111111110 ");
-        //     } else {
-        //       int binary = convert_to_binary(atol(splitStrings[i]));
-        //       //number of 0's we must add
-        //       int padding_required = 16 - intlen(binary);
-        //
-        //       switch (padding_required) {
-        //         case 1:
-        //           sprintf(binary_as_string, "0%i", binary);
-        //           break;
-        //         case 2:
-        //           sprintf(binary_as_string, "00%i", binary);
-        //           break;
-        //         case 3:
-        //           sprintf(binary_as_string, "000%i", binary);
-        //           break;
-        //         case 4:
-        //           sprintf(binary_as_string, "0000%i", binary);
-        //           break;
-        //         case 5:
-        //           sprintf(binary_as_string, "00000%i", binary);
-        //           break;
-        //         case 6:
-        //           sprintf(binary_as_string, "000000%i", binary);
-        //           break;
-        //         case 7:
-        //           sprintf(binary_as_string, "0000000%i", binary);
-        //           break;
-        //         case 8:
-        //           sprintf(binary_as_string, "00000000%i", binary);
-        //           break;
-        //         case 9:
-        //           sprintf(binary_as_string, "000000000%i", binary);
-        //           break;
-        //         case 10:
-        //           sprintf(binary_as_string, "0000000000%i", binary);
-        //           break;
-        //         case 11:
-        //           sprintf(binary_as_string, "00000000000%i", binary);
-        //           break;
-        //         case 12:
-        //           sprintf(binary_as_string, "000000000000%i", binary);
-        //           break;
-        //         case 13:
-        //           sprintf(binary_as_string, "0000000000000%i", binary);
-        //           break;
-        //         case 14:
-        //           sprintf(binary_as_string, "00000000000000%i", binary);
-        //           break;
-        //         case 15:
-        //           sprintf(binary_as_string, "000000000000000%i", binary);
-        //           break;
-        //       }
-        //       strcat(super_string, binary_as_string);
-        //       strcat(super_string, " ");
-        //     }/* endif */
-        //   }/* endfor */
-        // } else { // if type = 0 just copy the string in
-        //   fprintf(output, "%s\n", str);
-        // }
-        // printf("CONVERTED STRING:\n%s\n", super_string);
-        // fprintf(output, "%s\n", super_string);
-        // /*clear super string */
-        // memset(super_string,0,strlen(super_string));
-        //
+        //convert only if type 1
+        if (strcmp(splitStrings[0],"1") == 0) {
+          printf("\nORIGINAL STRING: %s", message);
+
+          //add the new type to the super_string
+          strcat(super_string, "0 ");
+
+          char binary_as_string[17];
+          for (int i = 1; i < count; i++) {;
+            //check for the 16 digit numbers before trying to insert into int
+            if ((strcmp(splitStrings[i],"65535") == 0) ||
+            (strcmp(splitStrings[i],"65535") == 13)) {
+              strcat(super_string, "1111111111111111 ");
+            } else if (strcmp(splitStrings[i],"65534") == 0) {
+              strcat(super_string, "1111111111111110 ");
+            } else {
+              int binary = convert_to_binary(atol(splitStrings[i]));
+              //number of 0's we must add
+              int padding_required = 16 - intlen(binary);
+
+              switch (padding_required) {
+                case 1:
+                  sprintf(binary_as_string, "0%i", binary);
+                  break;
+                case 2:
+                  sprintf(binary_as_string, "00%i", binary);
+                  break;
+                case 3:
+                  sprintf(binary_as_string, "000%i", binary);
+                  break;
+                case 4:
+                  sprintf(binary_as_string, "0000%i", binary);
+                  break;
+                case 5:
+                  sprintf(binary_as_string, "00000%i", binary);
+                  break;
+                case 6:
+                  sprintf(binary_as_string, "000000%i", binary);
+                  break;
+                case 7:
+                  sprintf(binary_as_string, "0000000%i", binary);
+                  break;
+                case 8:
+                  sprintf(binary_as_string, "00000000%i", binary);
+                  break;
+                case 9:
+                  sprintf(binary_as_string, "000000000%i", binary);
+                  break;
+                case 10:
+                  sprintf(binary_as_string, "0000000000%i", binary);
+                  break;
+                case 11:
+                  sprintf(binary_as_string, "00000000000%i", binary);
+                  break;
+                case 12:
+                  sprintf(binary_as_string, "000000000000%i", binary);
+                  break;
+                case 13:
+                  sprintf(binary_as_string, "0000000000000%i", binary);
+                  break;
+                case 14:
+                  sprintf(binary_as_string, "00000000000000%i", binary);
+                  break;
+                case 15:
+                  sprintf(binary_as_string, "000000000000000%i", binary);
+                  break;
+              }
+              strcat(super_string, binary_as_string);
+              strcat(super_string, " ");
+            }/* endif */
+          }/* endfor */
+        } else { // if type = 0 just copy the string in
+          fprintf(output, "%s\n", message);
+        }
+        printf("CONVERTED STRING:\n%s\n", super_string);
+        fprintf(output, "%s\n", super_string);
+        /*clear super string */
+        memset(super_string,0,strlen(super_string));
+
 
    fclose(output);
    return(0);
 }
 
-int type_2_translation(char message[], char output_file_target[]) {
-  printf("RUNNING TYPE 2 TRANSLATION\n");
+// convert binary to decimal with decimal units unchanged
+int type_1_translation(char message[], char output_file_target[]) {
+  printf("RUNNING TYPE 1 TRANSLATION\n");
   FILE * output;
   output = fopen(output_file_target,"a");
   char super_string[60];
@@ -256,7 +257,7 @@ int type_2_translation(char message[], char output_file_target[]) {
       int dec = convert_from_binary(splitStrings[i]);
       // convert string in the amount field to har reqrd number of bits
       if (i == 1) {
-        int padding_required = 3 - intlen(dec);
+        int padding_required = 24 - intlen(dec);
         //printf("padding amount by %i\n", padding_required);
         if (padding_required == 1) {
           sprintf(dec_as_string, "0%i", dec);
@@ -362,14 +363,7 @@ int type_3_translation(char input_file_path[], char output_file_target[]) {
         int dec = convert_from_binary(splitStrings[i]);
 
         if (i == 1) {
-          int padding_required = 3 - intlen(dec);
-          if (padding_required == 1) {
-            sprintf(dec_as_string, "0%i", dec);
-            strcat(super_string, dec_as_string);
-          } else if (padding_required == 2) {
-            sprintf(dec_as_string, "00%i", dec);
-            strcat(super_string, dec_as_string);
-          }
+          printf("there are %i numbers in the entry\n", dec);
         } else {
           sprintf(dec_as_string, "%i", dec);
           strcat(super_string, dec_as_string);
@@ -521,18 +515,18 @@ int correct_format(char str[]) {
         // if there is only one entry, or there are no commas the format is right
         return 1;
       } else if (strcmp(splitStrings[0], "0") == 0) { // if first character is a 0
-        // check that every single character is not something other than 0 or 1
-        for(int i = 0; i < count; i++) {
-          for(int j = 0; j < 17; j++) {
-            if (isdigit(splitStrings[i][j])) {
-              int char_as_int = splitStrings[i][j] - '0';
-              if (char_as_int > 1) {
-                printf("type 0 should have binary only. %d is not binary\n", char_as_int);
-                return 0;
-              }
-            }
-          }
-        }
+        // // check that every single character is not something other than 0 or 1
+        // for(int i = 0; i < count; i++) {
+        //   for(int j = 0; j < 17; j++) {
+        //     if (isdigit(splitStrings[i][j])) {
+        //       int char_as_int = splitStrings[i][j] - '0';
+        //       if (char_as_int > 1) {
+        //         printf("type 0 should have binary only. %d is not binary\n", char_as_int);
+        //         return 0;
+        //       }
+        //     }
+        //   }
+        // }
         // check that splitstrings 2 is 1 byte long
         if( strlen(splitStrings[1]) != 8) {
           // if splitStrings[2] is shorter than 1 byte, it's wrong
@@ -557,7 +551,7 @@ int correct_format(char str[]) {
       return 0;
     }
   } else { // else for if count < 3
-    printf("This line has only %d when it should have at least 3\n", count);
+    printf("This line has only %d field when it should have at least 3\n", count);
     return 0;
   }
 }
@@ -570,6 +564,5 @@ int find_index_of_separator(char str[]) {
 
   index = ptr - str;
 
-  printf("The index is %d\n", index);
   return index;
 }

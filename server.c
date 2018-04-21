@@ -57,8 +57,8 @@ int main(int argc, char *argv[]) {
     strncpy(message, &buffer[separator_index + 1], strlen(buffer));
     message[60] = '\0';     /*  terminate substring */
 
-    printf("message is: %s", message);
-    printf("target is: %s\n", output_file_target);
+    // printf("message is: %s", message);
+    // printf("target is: %s\n", output_file_target);
 
 
     char reply[20];
@@ -72,14 +72,14 @@ int main(int argc, char *argv[]) {
     if (strcmp(reply,"Failure!\n") == 0) {
       return 0;
     }
-    type_0_translation(message, output_file_target);
-    //type_1_translation(buffer, "output.txt");
-    //type_2_translation(buffer, "output.txt");
-    //type_3_translation(buffer, "output.txt");
+    //type_0_translation(message, output_file_target);
+    //type_1_translation(message, output_file_target);
+    type_2_translation(message, output_file_target);
+    //type_3_translation(message, output_file_target);
     //
-    // /*Send message back to client, using serverStorage as the address*/
-    // lossy_sendto(loss_probability, random_seed, udpSocket, reply, nBytes,
-    //   (struct sockaddr *)&serverStorage,addr_size);
+    /*Send message back to client, using serverStorage as the address*/
+    lossy_sendto(loss_probability, random_seed, udpSocket, reply, nBytes,
+      (struct sockaddr *)&serverStorage,addr_size);
   }
 
   return 0;
