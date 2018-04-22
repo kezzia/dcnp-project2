@@ -81,7 +81,12 @@ int main(int argc, char *argv[]) {
     fclose(input);
 
     while(1) {
-      /*Receive message from server*/
+      //tried to implement timer here to time out if we recive no ack
+      //code gets stuck on recvfrom and timer is unable to time out
+
+      /*Receive message from server. if we get no ack we must close since for a
+      set loss_probability and random_seed we get the same result every time,
+      guaranteeing an infinite loop*/
       nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
 
       printf("Received from server: %s\n",buffer);
