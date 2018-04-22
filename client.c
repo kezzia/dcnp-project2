@@ -6,7 +6,7 @@
 #include <string.h>
 #include "practice_project.h"
 #include "sendlib.h"
-#include <time.h>
+
 /*
 * <client> <server IP> <server port> <file path> <to format> <to name>
 * <loss probability> <random seed>
@@ -15,8 +15,7 @@ int main(int argc, char *argv[]) {
   char input_file_path[1024];
   char output_file_target[1024];
   char server_ip[17];
-  int port_num, to_format, random_seed;
-  float loss_probability;
+  int port_num, to_format, loss_probability, random_seed;
 
   if (argc != 8) {
     printf("Too few args!\n");
@@ -33,7 +32,7 @@ int main(int argc, char *argv[]) {
   /* Setting output file target */
   strcpy(output_file_target, argv[5]);
   /* Setting loss ratio */
-  loss_probability = atof(argv[6]);
+  loss_probability = atoi(argv[6]);
   /*setting seed */
   random_seed = atoi(argv[7]);
 
@@ -68,66 +67,31 @@ int main(int argc, char *argv[]) {
       perror("Error opening file!\n");
       return 1;
     }
-    printf("File opened!\n");
 
+    printf("File opened!\n");
     while ( fgets(str, 60, input) != NULL) {
-      //get message
+      printf("Working\n");
       sprintf(buffer, "%s$%s!%i", output_file_target,str,to_format);
       printf("Sending to server: %s", buffer);
       nBytes = strlen(buffer) + 1;
       /*Send message to server*/
       lossy_sendto(loss_probability, random_seed, clientSocket, buffer, nBytes,
         (struct sockaddr *)&serverAddr, addr_size);
-      int ack_rcvd;
-      int timer = 0;
-      while (timer < 5000) {
-        // the idea here was to give it 5000 iterations to receive the ack
-        // if no ack is rcvd close connection
-        // gets stuck on recvFrom if no response from server so it's impossible
-        // to loop
-        ack_rcvd = 0;
-        nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
-        printf("Received from server: %s\n",buffer);
-        if (strcmp(buffer,"ACK") == 0) {
-          ack_rcvd = 1;
-          break;
-        }
-        printf("%i seconds left\n", timer);
-        timer++;
-      }
-      printf("\nBYE\n");
-      // if we still have no ACK at this point, it's not coming
-      // Since the same value of random_seed and loss_probability result in the
-      // same segment loss over multiple executions, we are forced to close
-      // here to avoid an infinite loop
-      if (ack_rcvd == 0) {
-        printf("\nPacket lost. Change values of loss_probability and random_seed and try again\n");
-        printf("Current value of loss_probability: %f\n", loss_probability);
-        printf("Current value of random_seed: %i\n", random_seed);
-        return 0;
-      }
     }
     fclose(input);
 
-    // while(1) {
-    //
-    //
-    //   /*Receive message from server*/
-    //   /* if no message is received from server before timeout then the packet
-    //    * has been lost. Since the packets will ALWAYS be lost (or not lost) for
-    //    * the given values of loss_probability and random_seed, we close
-    //    * the connection here to avoid an infinite loop */
-    //
-    //   nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
-    //
-    //   printf("Received from server: %s\n",buffer);
-    //
-    //   // we should close if the server reports an error
-    //   if (strcmp(buffer,"Format error!\n") == 0) {
-    //     printf("Closing...\n");
-    //     return 0;
-    //   }
-    // }
+    while(1) {
+      /*Receive message from server*/
+      nBytes = recvfrom(clientSocket,buffer,1024,0,NULL, NULL);
+
+      printf("Received from server: %s\n",buffer);
+
+      // we should close if the server reports an error
+      if (strcmp(buffer,"Failure!\n") == 0) {
+        printf("Closing...\n");
+        return 0;
+      }
+    }
 
     return 0;
 }
