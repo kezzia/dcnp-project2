@@ -10,7 +10,8 @@
 
 /* <server> <port> <loss probability> <random seed> */
 int main(int argc, char *argv[]) {
-  int udpSocket, nBytes, port_num, loss_probability, random_seed;
+  int udpSocket, nBytes, port_num, random_seed;
+  float loss_probability;
   char buffer[1024];
   struct sockaddr_in serverAddr, clientAddr;
   struct sockaddr_storage serverStorage;
@@ -67,16 +68,20 @@ int main(int argc, char *argv[]) {
     printf("Target is: %s\n", output_file_target);
     printf("Using translation type: %i\n", to_format);
 
+    // if have successfully received the message, we send back an ACK
+    char ack[] = "ACK";
+    lossy_sendto(loss_probability, random_seed, udpSocket, ack, nBytes,
+      (struct sockaddr *)&serverStorage,addr_size);
 
     char reply[20];
     if (correct_format(message) == 1) {
       strcpy(reply, "Success!\n");
     } else {
-      strcpy(reply, "Failure!\n");
+      strcpy(reply, "Format error!\n");
     }
 
     // if we get a syntax error we must exit without doing anything
-    if (strcmp(reply,"Failure!\n") == 0) {
+    if (strcmp(reply,"Format error!\n") == 0) {
       return 0;
     }
 
